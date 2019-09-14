@@ -7,10 +7,12 @@
 .pnp.js
 
 # testing
-/coverage
+/server/coverage
+/client/coverage
 
 # production
-/build
+/server/build
+/client/build
 
 # misc
 .DS_Store
