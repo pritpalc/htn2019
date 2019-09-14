@@ -1,5 +1,5 @@
 const express = require('express');
-const sprites = require('../sprites').default;
+const sprites = require('../sprites');
 const merge = require('merge-images')
 const path = require('path')
 const router = express.Router();
