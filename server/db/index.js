@@ -1,4 +1,9 @@
+const Firestore = require('@google-cloud/firestore');
 
+const db = new Firestore({
+  projectId: 'civic-depth-252905',
+  keyFilename: 'C:\Users\jacyg\Documents\My_First_Project-db4d380f990b.json',
+});
 
 module.exports = {
     /** 
@@ -7,7 +12,19 @@ module.exports = {
      * @returns {Promise<{ username: string, password: string} | false>}
     */
     getUser: async (username) => {
-        return false
+        let userRef = db.collection('users').doc(username);
+        let getDoc = userRef.get()
+            .then(doc => {
+                if (!doc.exists) {
+                    return false;
+                } else {
+                    pass = doc.data()
+                    return {username, pass};
+                }
+            })
+            .catch(err => {
+                console.log('Error getting document', err);
+            });
     },
     /** 
      * Returns info for child
@@ -15,7 +32,13 @@ module.exports = {
      * @returns {Promise<{childId: string, parent:{ username: string, password: string}} | false>}
     */
     getChild: async (childCode) => {
-        return false
+        let userRef = db.collection('users')
+        let children = userRef.where('type', '==', 'museum');
+        children.get().then(function(querySnapshot) {
+            querySnapshot.forEach(function(doc) {
+                console.log(doc.id, ' => ', doc.data());
+            });
+        });
     },
     /**
      * @param {string} username
