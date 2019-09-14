@@ -1,7 +1,9 @@
 const Firestore = require('@google-cloud/firestore');
 
 /** @type {FirebaseFirestore.Firestore} */
-const db = new Firestore();
+const db = new Firestore({
+  projectId: 'civic-depth-252905'
+});
 
 module.exports = {
     /** 
