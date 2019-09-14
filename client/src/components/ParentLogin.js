@@ -34,8 +34,8 @@ class ParentLogin extends React.Component {
   getChildren() {
     getAuthenticatedData("/api/user/children", this.state.token)
       .then(response => {
-        console.log(response);
-        return response.children; // TODO: return a list of children
+        console.log(response.childDescription);
+        return response;
       })
       .catch(error => {
         console.log(error);

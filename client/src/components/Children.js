@@ -6,12 +6,12 @@ class Children extends React.Component {
     super(props);
 
     this.state = {
-      children: this.props.children // Children[], can be empty
+      children: props.children || []
     };
   }
 
   renderChildren() {
-    if (this.props.children.length !== 0) {
+    if (this.props.children !== undefined && this.props.children.length !== 0) {
       return this.props.children.forEach(child => {
         return <HygieneOptions />
       });
@@ -21,7 +21,7 @@ class Children extends React.Component {
   addChild() {
     const defaultChild = {
       name: undefined,
-      ageCategory: undefined,
+      isTeen: undefined,
       showerSchedule: undefined,
       brushingSchedule: undefined,
       deodorant: undefined
