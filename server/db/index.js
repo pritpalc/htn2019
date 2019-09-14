@@ -56,6 +56,7 @@ module.exports = {
      *      taskId: string,
      *      task: string, 
      *      schedules: {
+     *          scheduleId: string    
      *          repeats: { 
      *              units:"days" | "weeks" | "months",
      *              amount: number
@@ -63,7 +64,8 @@ module.exports = {
      *          time: {
      *              hour: number,
      *              minute: number
-     *          }
+     *          },
+     *         startDate: Date
      *      }[]
      * }[]>}
     */
@@ -78,15 +80,17 @@ module.exports = {
      *      taskId: string,
      *      task: string, 
      *      schedules: {
+     *          scheduleId?: string
      *          repeats: { 
      *              units:"days" | "weeks" | "months",
      *              amount: number
-     *          },
+     *          } | false,
      *          time: {
      *              hour: number,
      *              minute: number
-     *          }
-     *      }[]
+     *          },
+     *         startDate: Date
+     *      }[] | false
      * }[]} updates
      * @returns {Promise<boolean>} if the update was successful
      **/
