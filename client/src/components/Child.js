@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactCodeInput from 'react-code-input';
 import { postData } from '../utils';
+import CharacterViewer from './character-viewer';
 
 class Child extends React.Component {
   constructor() {
@@ -46,6 +47,9 @@ class Child extends React.Component {
             fields={6}
             onChange={this.logIn.bind(this)}
           />
+        </div>
+        <div>
+          <CharacterViewer/>
         </div>
       </div>
     );
