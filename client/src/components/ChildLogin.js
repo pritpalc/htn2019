@@ -3,7 +3,7 @@ import ReactCodeInput from 'react-code-input';
 import { postData } from '../utils';
 import CharacterViewer from './character-viewer';
 
-class Child extends React.Component {
+class ChildLogin extends React.Component {
   constructor() {
     super();
 
@@ -56,4 +56,4 @@ class Child extends React.Component {
   }
 }
 
-export default Child;
+export default ChildLogin;

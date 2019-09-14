@@ -1,6 +1,6 @@
-import React, {useEffect} from "react";
-import Parent from './components/Parent';
-import Child from './components/Child';
+import React, { useEffect } from "react";
+import ParentLogin from './components/ParentLogin';
+import ChildLogin from './components/ChildLogin';
 import { messaging} from './init-fcm';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
@@ -26,12 +26,12 @@ function Login() {
   );
 }
 
-function RenderParent() {
-  return <Parent />;
+function Parent() {
+  return <ParentLogin />;
 }
 
-function RenderChild() {
-  return <Child />;
+function Child() {
+  return <ChildLogin />;
 }
 
 const App = ()  => {
@@ -52,8 +52,8 @@ const App = ()  => {
       <div className="container">
         <div className="row justify-content-center mt-3">
           <Route path="/" exact component={Login} />
-          <Route path="/parent/" component={RenderParent} />
-          <Route path="/child/" component={RenderChild} />
+          <Route path="/parent/" component={Parent} />
+          <Route path="/child/" component={Child} />
         </div>
       </div>
     </Router>
