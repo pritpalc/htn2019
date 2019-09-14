@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "firebase": "^6.6.1",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-router-dom": "^5.0.1",
@@ -32,5 +33,5 @@
   "devDependencies": {
     "react-code-input": "^3.8.1"
   },
-  "proxy": "http://localhost:9999"
+  "proxy": "http://localhost:7890"
 }
