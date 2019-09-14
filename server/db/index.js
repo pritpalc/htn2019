@@ -7,7 +7,7 @@ module.exports = {
      * @returns {Promise<{ username: string, password: string} | false>}
     */
     getUser: async (username) => {
-        return false
+        return Promise.resolve({username: "fuck@you.com", password: "pass"})
     },
     /** 
      * Returns info for child

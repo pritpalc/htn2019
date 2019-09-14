@@ -11,9 +11,21 @@ class Parent extends React.Component {
   }
 
   logIn() {
-    this.setState({
-      loggedIn: true
-    });
+    console.log("LOG IN");
+    fetch("/auth/login", {
+      method: "POST"
+    })
+      .then(response => {
+        console.log(response);
+        this.setState({
+          loggedIn: true
+        });
+        return response.json();
+      })
+      .catch(error => {
+        console.log("fucked it up");
+        console.log(error);
+      });
   }
 
   render() {
