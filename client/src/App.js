@@ -1,6 +1,7 @@
-import React from "react";
+import React, {useEffect} from "react";
 import Parent from './components/Parent';
 import Child from './components/Child';
+import { messaging} from './init-fcm';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 function Login() {
@@ -33,7 +34,19 @@ function RenderChild() {
   return <Child />;
 }
 
-function App() {
+const App = ()  => {
+  useEffect(() => {
+    messaging.requestPermission()
+        .then(async function() {
+          const token = await messaging.getToken();
+          console.log(token)
+        })
+        .catch(function(err) {
+          console.log("Unable to get permission to notify.", err);
+        });
+      navigator.serviceWorker.addEventListener("message", (message) => console.log(message));
+
+  }, [])
   return (
     <Router>
       <div className="container">

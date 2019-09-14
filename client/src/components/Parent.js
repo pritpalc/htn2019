@@ -44,7 +44,7 @@ class Parent extends React.Component {
           <form onSubmit={this.logIn.bind(this)}>
             <div className="form-group">
               <label htmlFor="inputEmail">Email address</label>
-              <input type="email" className="form-control" id="inputEmail" placeholder="Enter email" />
+              <input type="username" className="form-control" id="inputEmail" placeholder="Enter email" />
             </div>
             <div className="form-group">
               <label htmlFor="inputPass">Password</label>

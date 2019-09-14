@@ -47,4 +47,24 @@ router.post('/preferences/:childId', (req, res) => {
     }
 })
 
+router.get('/schedules', (req, res) => {
+    db.getChildTaskSchedules(req.user.user.username,req.user.childId)
+            .then(schedules => {
+                if(schedules || schedules === []){
+                    res.json(schedules)
+                } else {
+                    res.status(500).json({status:"Internal error"})
+                }
+            })
+})
+
+router.post('/schedules/:childId', (req, res) => {
+    db.updateChildPreferences(req.user.user.username, req.params.childId, req.body).then(result => {
+        if(result){
+            res.status(200).json({status:"successfull"})
+        } else {
+            res.status(500).json({status:"internal server error"})
+        }
+    })
+})
 module.exports = router;

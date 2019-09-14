@@ -17,4 +17,8 @@ router.post('/preferences', (req, res) => {
     })
 })
 
+router.get('/children', (req, res) => {
+    db.getChildren(req.user.user.username).then(children => res.json(children))
+})
+
 module.exports = router;
