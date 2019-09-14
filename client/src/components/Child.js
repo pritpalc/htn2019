@@ -34,6 +34,7 @@ class Child extends React.Component {
   }
 
   render() {
+    // TODO: do something when logged in
     return (
       <div className="container">
         <div className="row justify-content-center">
