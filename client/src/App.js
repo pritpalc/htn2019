@@ -1,6 +1,6 @@
 import React from "react";
-import Parent from './components/Parent';
-import Child from './components/Child';
+import ParentLogin from './components/ParentLogin';
+import ChildLogin from './components/ChildLogin';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 function Login() {
@@ -25,12 +25,12 @@ function Login() {
   );
 }
 
-function RenderParent() {
-  return <Parent />;
+function Parent() {
+  return <ParentLogin />;
 }
 
-function RenderChild() {
-  return <Child />;
+function Child() {
+  return <ChildLogin />;
 }
 
 function App() {
@@ -39,8 +39,8 @@ function App() {
       <div className="container">
         <div className="row justify-content-center mt-3">
           <Route path="/" exact component={Login} />
-          <Route path="/parent/" component={RenderParent} />
-          <Route path="/child/" component={RenderChild} />
+          <Route path="/parent/" component={Parent} />
+          <Route path="/child/" component={Child} />
         </div>
       </div>
     </Router>
