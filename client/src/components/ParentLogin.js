@@ -1,8 +1,8 @@
 import React from 'react';
-import HygieneOptions from './HygieneOptions';
-import { postData } from '../utils';
+import Children from './Children';
+import { postData, getAuthenticatedData } from '../utils';
 
-class Parent extends React.Component {
+class ParentLogin extends React.Component {
   constructor() {
     super();
 
@@ -39,10 +39,21 @@ class Parent extends React.Component {
       });
   }
 
+  getChildren() {
+    getAuthenticatedData("/api/user/children", this.state.token)
+      .then(response => {
+        console.log(response);
+        return response.children; // TODO: return a list of children
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+
   render() {
     if (this.state.loggedIn) {
       console.log(this.state.token);
-      return <HygieneOptions />
+      return <Children children={this.getChildren()} />
     } else {
       return (
         <div className="container">
@@ -66,4 +77,4 @@ class Parent extends React.Component {
   }
 }
 
-export default Parent;
+export default ParentLogin;
