@@ -1,35 +1,39 @@
 import React from 'react';
 import HygieneOptions from './HygieneOptions';
+import { postData } from '../utils';
 
 class Parent extends React.Component {
   constructor() {
     super();
 
     this.state = {
-      loggedIn: false
+      loggedIn: false,
+      token: ""
     };
   }
 
-  logIn() {
-    console.log("LOG IN");
-    fetch("/auth/login", {
-      method: "POST"
-    })
+  logIn(e) {
+    e.preventDefault();
+    let data = {
+      username: e.target.elements.inputEmail.value,
+      password: e.target.elements.inputPass.value
+    };
+    postData("/auth/login", data)
       .then(response => {
         console.log(response);
         this.setState({
+          token: JSON.parse(response).token,
           loggedIn: true
         });
-        return response.json();
       })
       .catch(error => {
-        console.log("fucked it up");
         console.log(error);
       });
   }
 
   render() {
     if (this.state.loggedIn) {
+      console.log(this.state.token);
       return <HygieneOptions />
     } else {
       return (
@@ -37,7 +41,7 @@ class Parent extends React.Component {
           <div className="row justify-content-center">
             <h2>Login</h2>
           </div>
-          <form>
+          <form onSubmit={this.logIn.bind(this)}>
             <div className="form-group">
               <label htmlFor="inputEmail">Email address</label>
               <input type="email" className="form-control" id="inputEmail" placeholder="Enter email" />
@@ -46,7 +50,7 @@ class Parent extends React.Component {
               <label htmlFor="inputPass">Password</label>
               <input type="password" className="form-control" id="inputPass" placeholder="Password" />
             </div>
-            <button type="submit" className="btn btn-primary" onClick={this.logIn.bind(this)}>Submit</button>
+            <button type="submit" className="btn btn-primary">Submit</button>
           </form>
         </div>
       );

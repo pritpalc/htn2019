@@ -10,7 +10,9 @@ passport.use(new LocalStrategy({
         passwordField: 'password'
     }, 
     (username, password, cb) => {
-        if(password.length > 0) {
+        console.log(username)
+        console.log(password)
+        if(password !== username) {
             db.getUser(username).then(user => {
                 if (!user) {
                     return cb(null, false, {message: 'Incorrect email or password.'});

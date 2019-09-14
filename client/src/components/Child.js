@@ -1,7 +1,38 @@
 import React from 'react';
 import ReactCodeInput from 'react-code-input';
+import { postData } from '../utils';
 
 class Child extends React.Component {
+  constructor() {
+    super();
+
+    this.state = {
+      loggedIn: false,
+      token: ""
+    };
+  }
+
+  logIn(e) {
+    if (e.length === 6) {
+      let data = {
+        username: e,
+        password: e
+      };
+  
+      postData("/auth/login", data)
+        .then(response => {
+          console.log(response);
+          this.setState({
+            token: JSON.parse(response).token,
+            loggedIn: true
+          });
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
+  }
+
   render() {
     return (
       <div className="container">
@@ -12,7 +43,7 @@ class Child extends React.Component {
           <ReactCodeInput 
             type="number"
             fields={6}
-            className=""
+            onChange={this.logIn.bind(this)}
           />
         </div>
       </div>

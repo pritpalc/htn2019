@@ -12,10 +12,10 @@ module.exports = {
     /** 
      * Returns info for child
      * @param {string} childCode
-     * @returns {Promise<{childId: string, parent:{ username: string, password: string}} | false>}
+     * @returns {Promise<{childId: string, parent: {username: string, password: string}} | false>}
     */
     getChild: async (childCode) => {
-        return false
+        return Promise.resolve({childId: "123456", parent: {username: "fuck@you.com", password: "pass"}})
     },
     /**
      * @param {string} username
