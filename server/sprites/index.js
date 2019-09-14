@@ -1,16 +1,14 @@
-module.exports = {
-  "legs/pants": {
+module.exports={
+  "shoes": {
     "male": [
-      "magenta_pants_male.png",
-      "teal_pants_male.png",
-      "white_pants_male.png",
-      "red_pants_male.png"
+      "black_shoes_male.png",
+      "brown_shoes_male.png",
+      "maroon_shoes_male.png"
     ],
     "female": [
-      "red_pants_female.png",
-      "magenta_pants_female.png",
-      "white_pants_female.png",
-      "teal_pants_female.png"
+      "maroon_shoes_female.png",
+      "brown_shoes_female.png",
+      "black_shoes_female.png"
     ]
   },
   "body": {
@@ -51,16 +49,18 @@ module.exports = {
       "yellow.png"
     ]
   },
-  "feet/shoes": {
+  "pants": {
     "male": [
-      "black_shoes_male.png",
-      "brown_shoes_male.png",
-      "maroon_shoes_male.png"
+      "magenta_pants_male.png",
+      "teal_pants_male.png",
+      "white_pants_male.png",
+      "red_pants_male.png"
     ],
     "female": [
-      "maroon_shoes_female.png",
-      "brown_shoes_female.png",
-      "black_shoes_female.png"
+      "red_pants_female.png",
+      "magenta_pants_female.png",
+      "white_pants_female.png",
+      "teal_pants_female.png"
     ]
   },
   "hair": {
@@ -129,6 +129,24 @@ module.exports = {
       "messy1.png"
     ]
   },
+  "shirts": {
+    "male": [
+      "teal_longsleeve.png",
+      "maroon_longsleeve.png",
+      "brown_longsleeve.png",
+      "white_longsleeve.png"
+    ],
+    "female": [
+      "teal_sleeveless.png",
+      "white_sleeveless.png",
+      "brown_sleeveless.png",
+      "brown_pirate.png",
+      "maroon_pirate.png",
+      "white_pirate.png",
+      "maroon_sleeveless.png",
+      "teal_pirate.png"
+    ]
+  },
   "ears": {
     "male": [
       "bigears_darkelf.png",
@@ -163,60 +181,14 @@ module.exports = {
       "bigears_light.png"
     ]
   },
-  "torso/shirts": {
+  "head": {
     "male": [
-      "teal_longsleeve.png",
-      "maroon_longsleeve.png",
-      "brown_longsleeve.png",
-      "white_longsleeve.png"
+      "leather_cap_male.png",
+      "red_bandana.png"
     ],
     "female": [
-      "teal_sleeveless.png",
-      "white_sleeveless.png",
-      "brown_sleeveless.png",
-      "brown_pirate.png",
-      "maroon_pirate.png",
-      "white_pirate.png",
-      "maroon_sleeveless.png",
-      "teal_pirate.png"
-    ]
-  },
-  "head/bandanas": {
-    "male": [
-      "red.png"
-    ],
-    "female": [
-      "red.png"
-    ]
-  },
-  "head/caps": {
-    "male": [
-      "leather_cap_male.png"
-    ],
-    "female": [
+      "red_bandana.png",
       "leather_cap_female.png"
-    ]
-  },
-  "head/helms": {
-    "male": [
-      "golden_helm_male.png",
-      "chainhat_male.png",
-      "metal_helm_male.png"
-    ],
-    "female": [
-      "metal_helm_female.png",
-      "chainhat_female.png",
-      "golden_helm_female.png"
-    ]
-  },
-  "head/hoods": {
-    "male": [
-      "chain_hood_male.png",
-      "cloth_hood_male.png"
-    ],
-    "female": [
-      "cloth_hood_female.png",
-      "chain_hood_female.png"
     ]
   },
   "nose": {

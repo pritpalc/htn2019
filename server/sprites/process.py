@@ -27,5 +27,6 @@ for fileInfo in filenames:
 
 
 with open('index.js', "w") as f:
+    f.write("module.exports=")
     dump(index,f, indent=2)
 #%%
