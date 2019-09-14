@@ -31,5 +31,6 @@
   },
   "devDependencies": {
     "react-code-input": "^3.8.1"
-  }
+  },
+  "proxy": "http://localhost:9999"
 }
