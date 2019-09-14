@@ -67,4 +67,10 @@ router.post('/schedules/:childId', (req, res) => {
         }
     })
 })
+
+
+router.post('/registerToken', (req,res) => {
+    db.registerPushToken(req.user.user.username,req.body.token).then(()  => res.json({status: 'success'}))
+})
+
 module.exports = router;

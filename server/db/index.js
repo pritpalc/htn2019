@@ -161,5 +161,21 @@ module.exports = {
         }).then(children => {
             return children.map(child =>child.data() ).map(data => ({...data}))
         })
+    },
+
+    /**
+     * @param {string} username
+     * @param {string} token
+     */
+    registerPushToken: async(username, token) => {
+        return db.collection('users').doc(username).update('pushTokens', Firestore.FieldValue.arrayUnion(token))
+    },
+
+    /**
+     * @param {string} username
+     * @param {string} token
+     */
+    registerChildPushToken: async(username, childId, token) => {
+        return db.collection('users').doc(username).collection('children').doc(childId).update('pushTokens', Firestore.FieldValue.arrayUnion(token))
     }
 }
