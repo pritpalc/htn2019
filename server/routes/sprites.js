@@ -10,9 +10,9 @@ Canvas.Image = ncanvas.Image
 /* GET users listing. */
 router.get('/', (req, res) => res.json(sprites));
 router.post('/layer', (req, res) => {
-    const paths = req.body
-   
-    merge(paths.map(p => path.join('sprites',p)), {Canvas:Canvas}).then(value => res.send(value))
+    const {layers,row} = req.body
+
+    merge(layers.map(p => ({src:path.join('sprites',p),y:-(64*row)})), {Canvas:Canvas,height:64}).then(value => res.send(value))
 })
 router.use('/',express.static('sprites'))
 
