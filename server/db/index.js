@@ -105,11 +105,7 @@ module.exports = {
      *              units:"days" | "weeks" | "months",
      *              amount: number
      *          },
-     *          time: {
-     *              hour: number,
-     *              minute: number
-     *          },
-     *         startDate: Date
+     *         start: Date
      *      }[]
      * }[]>}
     */
@@ -133,11 +129,7 @@ module.exports = {
      *              units:"days" | "weeks" | "months",
      *              amount: number
      *          } | false,
-     *          time: {
-     *              hour: number,
-     *              minute: number
-     *          },
-     *         startDate: Date
+     *         start: Date
      *      }[] | false
      * }} updates
      * @returns {Promise<boolean>} if the update was successful
@@ -177,5 +169,31 @@ module.exports = {
      */
     registerChildPushToken: async(username, childId, token) => {
         return db.collection('users').doc(username).collection('children').doc(childId).update('pushTokens', Firestore.FieldValue.arrayUnion(token))
+    },
+
+    /**
+     * @param {string} username
+    * @param {{[prefKey : string]: value}} prefs
+    * @param {string} code
+    * @param {string} childDescription
+    * @param { {task: string, 
+     *      schedules: {
+        *          scheduleId?: string
+        *          repeats: { 
+        *              units:"days" | "weeks" | "months",
+        *              amount: number
+        *          },
+        *         start: Date
+        *      }[]}[]} tasks
+     */
+    newChild: async(username, prefs, code, childDescription, tasks) => {
+        return db.collection('users').doc(username).collection('children').add({
+            code,
+            prefs,
+            childDescription,
+            pushTokens:[],
+            tknBalance:0})
+        .then(child => Promise.all(tasks.map(task => child.collection("Tasks").add(task))).then(() => child.get()))
+        .then(child => ({...child.data()}))
     }
 }
