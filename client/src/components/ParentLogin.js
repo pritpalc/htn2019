@@ -45,8 +45,8 @@ class ParentLogin extends React.Component {
           </div>
           <form onSubmit={this.logIn.bind(this)}>
             <div className="form-group">
-              <label htmlFor="inputEmail">Email address</label>
-              <input type="username" className="form-control" id="inputEmail" placeholder="Enter email" />
+              <label htmlFor="inputEmail">Username</label>
+              <input type="username" className="form-control" id="inputEmail" placeholder="Enter username" />
             </div>
             <div className="form-group">
               <label htmlFor="inputPass">Password</label>

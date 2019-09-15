@@ -1,9 +1,14 @@
 import React from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import moment from 'moment';
 import { postAuthenticatedData } from '../utils';
 
 class HygieneOptions extends React.Component {
   constructor(props) {
     super(props);
+    
+    toast.configure();
 
     this.state = {
       childDescription: props.childDescription,
@@ -12,7 +17,8 @@ class HygieneOptions extends React.Component {
       brushingSchedule: props.brushingSchedule,
       deodorant: props.deodorant,
       code: props.code,
-      id: props.id
+      id: props.id,
+      isSaved: false
     };
   }
 
@@ -66,6 +72,19 @@ class HygieneOptions extends React.Component {
     }, this.props.token)
       .then(response => {
         console.log(response);
+        this.setState({
+          isSaved: true
+        });
+      })
+      .catch(error => {
+        console.log(error);
+      });
+
+    postAuthenticatedData(`/api/child/schedules/${this.state.id}`, {
+      tasks: this.createTaskArray()
+    }, this.props.token)
+      .then(response => {
+        console.log(response);
       })
       .catch(error => {
         console.log(error);
@@ -83,23 +102,86 @@ class HygieneOptions extends React.Component {
         showerSchedule: ele.showerSchedule.value,
         brushingSchedule: ele.brushingSchedule.value,
         deodorant: ele.deodorant.value
-      }
+      },
+      tasks: this.createTaskArray()
     }, this.props.token)
       .then(response => {
         console.log(response);
+        this.setState({
+          isSaved: true
+        });
       })
       .catch(error => {
         console.log(error);
       });
   }
 
+  notify = () => toast("Save successful!");
+
   deleteChild() {
     this.props.deleteChild(this.state.code);
   }
 
+  createTaskArray() {
+    let tasks = [];
+    tasks.push(this.createScheduledTasks(this.state.showerSchedule, "Showering/Bathing"));
+    tasks.push(this.createScheduledTasks(this.state.brushingSchedule, "Oral Health"));
+    tasks.push(this.createScheduledTasks(this.state.deodorant, "Deodorant"));
+
+    return tasks;
+  }
+
+  createScheduledTasks(schedule, taskName) {
+    let units, amount;
+    let startDate = moment().add(1, 'days').calendar();
+
+    switch(schedule) {
+      case "Once a day":
+      case "Daily":
+      case "Twice a day":
+      case "Three times a day":
+        units = "days";
+        amount = 1;
+        break;
+      case "Once every two days":
+        units = "days";
+        amount = 2;
+        break;
+      case "Once a week":
+        units = "weeks";
+        amount = 1;
+        break;
+      case "Twice a week":
+        units = "days";
+        amount = 4;
+        break;
+    }
+
+    return this.createTask(units, amount, startDate, taskName);
+  }
+
+  createTask(units, amount, startDate, taskName) {
+    if (units === undefined || amount === undefined) {
+      return {
+        task: taskName,
+        schedules: []
+      };
+    }
+
+    return {
+      task: taskName,
+      schedules: [{
+        repeats: {
+          units: units,
+          amount: amount
+        },
+        start: startDate
+      }]
+    };
+  }
+
   render() {
     // TODO: add links for more instructions or add text detailing everything
-    // TODO: add dates and times for scheduling
     return (
       <div className="container">
         <h3>Preferences for Child</h3>
@@ -173,8 +255,9 @@ class HygieneOptions extends React.Component {
               <option value="Once every two days">Once every two days</option>
             </select>
           </div>
-          <button type="submit" className="btn btn-primary">Save</button>
-          <button className="btn btn-danger ml-3" onClick={this.deleteChild.bind(this)}>Delete</button>
+          <button type="submit" className="btn btn-primary" onClick={this.notify}>Save</button>
+          {/* {this.state.isSaved ? <ToastContainer className="d-inline" /> : ""} */}
+          <button className="btn btn-danger ml-3 float-right" onClick={this.deleteChild.bind(this)}>Delete</button>
         </form>
         <hr />
       </div>

@@ -1,13 +1,15 @@
 import React from 'react';
 import HygieneOptions from './HygieneOptions';
 import { getAuthenticatedData } from '../utils';
+import NotificationModal from './NotificationModal';
 
 class Children extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      children: this.getChildren() || []
+      children: this.getChildren() || [],
+      showNotifications: false
     };
   }
 
@@ -50,10 +52,10 @@ class Children extends React.Component {
       code: this.createChildCode(),
       childDescription: undefined,
       prefs: {
-        isTeen: undefined,
-        showerSchedule: undefined,
-        brushingSchedule: undefined,
-        deodorant: undefined
+        isTeen: false,
+        showerSchedule: "Twice a week",
+        brushingSchedule: "Once a day",
+        deodorant: "Never"
       }
     };
 
@@ -76,8 +78,19 @@ class Children extends React.Component {
   }
 
   render() {
+    if (this.state.showNotifications) {
+      return (
+        <NotificationModal token={this.props.token} children={this.state.children} closeModal={() => this.setState({ showNotifications: false })} />
+      );
+    }
+
     return (
       <div className="container">
+        <div className="row float-right">
+          <button type="button" className="btn btn-primary mt-1" onClick={() => this.setState({ showNotifications: true })}>
+            View notifications
+          </button>
+        </div>
         {this.renderChildren()}
         <div className="row justify-content-center">
           <button

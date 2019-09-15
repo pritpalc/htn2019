@@ -75,6 +75,24 @@ input[type=number]::-webkit-outer-spin-button {
   margin: 0;
 }
 
+.banner {
+  background-color: #007bff;
+  height: 100vh;
+  padding: 260px 0;
+}
+
+.full-height {
+  height: 100vh;
+}
+
+.drop-shadow {
+  box-shadow: 7px 7px 2px #0238bf;
+}
+
+.extra-padding {
+  padding-top: 270px;
+}
+
 /* End */
 
 hr {
