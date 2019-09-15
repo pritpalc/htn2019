@@ -80,7 +80,7 @@ router.post('/description/:childId', (req, res) => {
 
 
 router.post('/registerToken', (req,res) => {
-    db.registerPushToken(req.user.user.username,req.body.token).then(()  => res.json({status: 'success'}))
+    db.registerChildPushToken(req.user.user.username,req.user.childId,req.body.token).then(()  => res.json({status: 'success'}))
 })
 
 router.get('/character' , (req,res) => {

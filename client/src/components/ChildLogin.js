@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactCodeInput from 'react-code-input';
-import { postData } from '../utils';
+import { messaging} from '../init-fcm';
+import { postData, postAuthenticatedData } from '../utils';
 
 class ChildLogin extends React.Component {
   constructor() {
@@ -22,14 +23,16 @@ class ChildLogin extends React.Component {
       postData("/auth/login", data)
         .then(response => {
           console.log(response);
-          this.setState({
+          return this.setState({
             token: JSON.parse(response).token,
             loggedIn: true
           });
         })
-        .catch(error => {
-          console.log(error);
-        });
+        .catch(error => console.log(error))
+        .then(() =>  messaging.requestPermission()) 
+        .then(() =>  messaging.getToken())
+        .then(token => postAuthenticatedData('/api/child/registerToken',{token}, this.state.token))
+        .catch((err) => console.log("Unable to get permission to notify.", err))
     }
   }
 
