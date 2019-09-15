@@ -1,11 +1,12 @@
 import React from 'react';
+import { postAuthenticatedData } from '../utils';
 
 class HygieneOptions extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      name: props.name,
+      childDescription: props.childDescription,
       isTeen: props.isTeen,
       showerSchedule: props.showerSchedule,
       brushingSchedule: props.brushingSchedule,
@@ -14,41 +15,35 @@ class HygieneOptions extends React.Component {
   }
 
   // TODO: call API for onChange for each input (pass down token)
-  updateChildName() {
-
+  updateChildDescription(e) {
+    e.preventDefault();
   }
 
-  updateIsTeen() {
-
+  updatePreferences(e) {
+    e.preventDefault();
   }
 
-  updateShowerSchedule() {
-
-  }
-
-  updateBrushingSchedule() {
-
-  }
-
-  updateDeodorant() {
-
+  deleteChild(e) {
+    this.props.deleteChild(e.code); // TODO: pass in child code
   }
 
   render() {
     // TODO: add a section to choose age category first and then recommend
     // TODO: takes in props for all selected
+    // TODO: add links for more instructions or add text detailing everything
     return (
       <div className="container">
-        <form>
+        <h3>Preferences for Child</h3>
+        <form onSubmit={this.updatePreferences.bind(this)}>
           <div className="form-group">
-            <label for="childName">Child's Name</label>
+            <label htmlFor="childName">Child's Name</label>
             <input 
               type="text" 
               className="form-control" 
               id="childName" 
               placeholder="Enter name" 
               value={this.state.name} 
-              onChange={this.updateChildName.bind(this)}
+              onChange={this.updateChildDescription.bind(this)}
             />
           </div>
           <div className="form-group">
@@ -56,7 +51,6 @@ class HygieneOptions extends React.Component {
             <select 
               className="custom-select my-1 mr-sm-2" 
               id="isTeen"
-              onChange={this.updateIsTeen.bind(this)}
             >
               <option value={false} selected>5 - 11</option>
               <option value={true}>12 - 18</option>
@@ -67,7 +61,6 @@ class HygieneOptions extends React.Component {
             <select 
               className="custom-select my-1 mr-sm-2" 
               id="showerSchedule"
-              onChange={this.updateShowerSchedule.bind(this)}
             >
               <option value="Daily (Recommended)" selected>Daily (Recommended)</option>
               <option value="Twice a day">Twice a day</option>
@@ -80,7 +73,6 @@ class HygieneOptions extends React.Component {
             <select 
               className="custom-select my-1 mr-sm-2" 
               id="brushingSchedule"
-              onChange={this.updateBrushingSchedule.bind(this)}
             >
               <option value="Once a day">Once a day</option>
               <option value="Twice a day (Recommended)" selected>Twice a day (Recommended)</option>
@@ -93,7 +85,6 @@ class HygieneOptions extends React.Component {
             <select 
               className="custom-select my-1 mr-sm-2" 
               id="deodorant"
-              onChange={this.updateDeodorant.bind(this)}
             >
               <option value="Never">Never</option>
               <option value="Once a day (Recommended)" selected>Once a day (Recommended)</option>
@@ -101,7 +92,10 @@ class HygieneOptions extends React.Component {
               <option value="Once every two days">Once every two days</option>
             </select>
           </div>
+          <button type="submit" className="btn btn-primary">Save</button>
+          <button className="btn btn-danger" onClick={this.deleteChild}>Delete</button>
         </form>
+        <hr />
       </div>
     );
   }

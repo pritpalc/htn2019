@@ -8,7 +8,8 @@ class ParentLogin extends React.Component {
 
     this.state = {
       loggedIn: false,
-      token: ""
+      token: "",
+      children: undefined
     };
   }
 
@@ -31,21 +32,9 @@ class ParentLogin extends React.Component {
       });
   }
 
-  getChildren() {
-    getAuthenticatedData("/api/user/children", this.state.token)
-      .then(response => {
-        console.log(response.childDescription);
-        return response;
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  }
-
   render() {
     if (this.state.loggedIn) {
-      console.log(this.state.token);
-      return <Children children={this.getChildren()} />
+      return <Children token={this.state.token} />
     } else {
       return (
         <div className="container">
