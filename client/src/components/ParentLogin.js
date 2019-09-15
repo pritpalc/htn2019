@@ -24,8 +24,16 @@ class ParentLogin extends React.Component {
         console.log(response);
         this.setState({
           token: JSON.parse(response).token,
-          loggedIn: true
+          loggedIn: true})
+          .then(() =>  messaging.requestPermission()) 
+          .then(() =>  messaging.getToken())
+          .then(notificationToken => {
+            
+        })
+        .catch(function(err) {
+          console.log("Unable to get permission to notify.", err);
         });
+      navigator.serviceWorker.addEventListener("message", (message) => console.log(message));;
       })
       .catch(error => {
         console.log(error);

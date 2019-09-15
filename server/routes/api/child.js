@@ -67,4 +67,20 @@ router.post('/schedules/:childId', (req, res) => {
         }
     })
 })
+
+router.post('/description/:childId', (req, res) => {
+    db.setChildDescription(req.user.user.username, req.params.childId, req.body.childDescription).then(result => {
+        if(result){
+            res.status(200).json({status:"successfull"})
+        } else {
+            res.status(500).json({status:"internal server error"})
+        }
+    })
+})
+
+
+router.post('/registerToken', (req,res) => {
+    db.registerPushToken(req.user.user.username,req.body.token).then(()  => res.json({status: 'success'}))
+})
+
 module.exports = router;
