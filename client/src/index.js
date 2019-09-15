@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import './bootstrap/dist/css/bootstrap.css';
 import './bootstrap/dist/css/bootstrap-grid.css';
+import './css/styles.css';
 import * as serviceWorker from './serviceWorker';
 
 if ("serviceWorker" in navigator) {

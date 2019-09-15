@@ -19,14 +19,18 @@ const CharacterViewer = (props) => {
               setError("User does not exist");
               return;
             }
+
+
             const data = JSON.parse(result).characterDefinition;
-            setIsLoaded(true);
-            setCharacterDefinition(JSON.parse(result).characterDefinition);
+            console.log(data);
+            setCharacterDefinition(data);
+
             if (Object.entries(data).length === 0 && data.constructor === Object) {
               setIsNewUser(true);
             } else {
               loadSprite(data);
             }
+
           },
           (error) => {
             setIsLoaded(false)
@@ -36,20 +40,25 @@ const CharacterViewer = (props) => {
     },[])
 
     const loadSprite = (data) => {
-      const row = data.animation;
-      delete data.gender;
-      delete data.animation;
-      console.log(characterDefinition);
+      console.log(data)
+      const row = data.animation; 
+      const {gender, animation, ...pictures} = data
+      console.log(row);
+      console.log(pictures)
       postData("/sprites/layer",{
-        layers: Object.values(data).sort(),
+        layers:Object.values(pictures).sort(),
         row:row
       })
       .then(
         (result) => {
           setImage(result)
+          setIsLoaded(true);
+
         },
         (error) => {
           setError(error)
+          setIsLoaded(false);
+
         }
       )
     }
@@ -63,19 +72,19 @@ const CharacterViewer = (props) => {
         if (customizeCharacter) {
           console.log(characterDefinition);
           return (
-            <CharacterCustomizer token={props.token} newUser={false} characterDefinition={characterDefinition} setCustomizeCharacter={(value, data) => {setCustomizeCharacter(value); loadSprite(data);}}/>
+            <CharacterCustomizer token={props.token} newUser={false} characterDefinition={characterDefinition} setCustomizeCharacter={(value, data) => {setCustomizeCharacter(value); setCharacterDefinition(data); loadSprite(data);}}/>
           );
         } else {
           return (
-            <div>
+            <div className="vh-100 align-items-center justify-content-center d-flex flex-column">
               <SpriteAnimator
                 sprite={image}
                 width={64}
                 height={64}
                 fps={8}
-                scale={0.1}
+                scale={0.2}
               />
-              <button onClick={() => setCustomizeCharacter(true)}>Customize Character</button>
+              <button onClick={() => setCustomizeCharacter(true)} type="button" className="btn btn-primary mt-5">Customize Character</button>
             </div>
           );
         }

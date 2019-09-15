@@ -1,6 +1,17 @@
 import React, {useState, useEffect} from 'react';
 import { postData, postAuthenticatedData } from '../utils';
 import * as SpriteAnimator from 'react-sprite-animator';
+import AliceCarousel from 'react-alice-carousel';
+import "react-alice-carousel/lib/alice-carousel.css";
+
+const Gallery = (props) => {
+  const handleOnDragStart = e => e.preventDefault()
+  return (
+    <AliceCarousel mouseDragEnabled >
+      {props.children}
+    </AliceCarousel>
+  )
+}
 
 const CharacterCustomizer = (props) => {
     const [error, setError] =  useState(null)
@@ -26,9 +37,7 @@ const CharacterCustomizer = (props) => {
 
     const loadSprite = () => {
       const row = characterDefinition.animation;
-      let data = {...characterDefinition};
-      delete data.gender;
-      delete data.animation;
+      const {gender, animation, ...data} = characterDefinition
       postData("/sprites/layer",{
         layers: Object.values(data).sort(),
         row:row
@@ -60,52 +69,89 @@ const CharacterCustomizer = (props) => {
 
     const x = () => {
       let output = [];
+
+      const responsive = {}
+      for(let i = 0,j=1; i <=1024; i += 64,j+=1){
+        responsive[i] = {items:j}
+      }
       const gender = characterDefinition.gender;
+      return ( <div> {Object.keys(items).map(category => <div>
+          <h4>{category}</h4>
+          <AliceCarousel
+            responsive={responsive}
+            infinite={true}
+            autoPlay={false}
+            items={items[category][gender].map(el => {
+              const val = category+"/"+gender+"/"+el;
+              return <div>
+                <figure className="cropped-image">
+                    <img src={"/sprites/" + val} />
+                  </figure>
+              </div>})}
+          />
+        </div>)
+      }</div>
+      )
+      /*
       for(const category in items){
         output.push(<h4>{category}</h4>)
+
         for (const el of items[category][gender]) {
-          const val = category+"/"+gender+"/"+el;
+          
           output.push(
             <div>
               <input 
-                // onChange={() => characterDefinition[category] = val} 
                 onChange={() => {let data = {... characterDefinition}; data[category] = val; setCharacterDefinition(data)}}
                 type="radio" id={el} 
                 name={category} 
                 value={category + "/" + gender + "/" + el}
                 checked={characterDefinition[category] === val}
               />
-              <label htmlFor={el}>{el}</label>
+              <label htmlFor={el}>
+                <figure className="cropped-image">
+                  <img src={"/sprites/" + val} />
+                </figure>
+              </label>
             </div>
           );
         }
       }
-      return output;
+      return output;*/
     }
 
     const y = () => {
       let output = [];
-      for (let i=1; i<21; i++) {
-        output.push(
-          <div>
-            <input onChange={() => {let data = {... characterDefinition}; data.animation = i; setCharacterDefinition(data)}} type="radio" id={i} name="Animation" value={i} checked={characterDefinition.animation === i}/>
-            <label htmlFor={i}>{i}</label>
-          </div>
-        )
+      const animationNames = ["Spellcast", "Thrust", "Walk", "Slash", "Shoot"];
+      const animationPositions = ["Back", "Left", "Front", "Right"];
+      for (let i=0; i<animationNames.length; i++) {
+        for (let j=0; j< animationPositions.length; j++) {
+          const id = animationPositions.length*i+j;
+          output.push(
+            <div>
+              <input onChange={() => {let data = {... characterDefinition}; data.animation = id; setCharacterDefinition(data)}} type="radio" id={id} name="Animation" value={id} checked={characterDefinition.animation === id}/>
+              <label htmlFor={id}>{animationNames[i] + " " + animationPositions[j]}</label>
+            </div>
+          )
+        }
       }
+      output.push(
+        <div>
+          <input onChange={() => {let data = {... characterDefinition}; data.animation = 20; setCharacterDefinition(data)}} type="radio" id={20} name="Animation" value={20} checked={characterDefinition.animation === 20}/>
+          <label htmlFor={20}>Hurt</label>
+        </div>
+      )
       return output;
     }
 
     if (isLoaded) {
       if (props.newUser) {
         return(
-          <div>
+          <div className="w-100">
             <form id="choices">
               <h4>Gender</h4>
               <div>
                 <input 
-                  // onChange={() => setCharacterDefinition({"gender": "male", "animation": 1})} 
-                  onChange={() => {let data = {... characterDefinition}; data.gender = "male"; data.animation = 1; setCharacterDefinition(data)}}
+                  onChange={() => setCharacterDefinition({...characterDefinition, gender:'male', animation:1})}
                   type="radio" 
                   id="male" 
                   name="gender" 
@@ -116,8 +162,7 @@ const CharacterCustomizer = (props) => {
               </div>
               <div>
                 <input 
-                  // onChange={() => setCharacterDefinition({"gender": "female", "animation": 1})} 
-                  onChange={() => {let data = {... characterDefinition}; data.gender = "female"; data.animation = 1; setCharacterDefinition(data)}}
+                  onChange={() => setCharacterDefinition({...characterDefinition, gender:'male', animation:1})}
                   type="radio" 
                   id="female" 
                   name="gender" 
@@ -138,21 +183,19 @@ const CharacterCustomizer = (props) => {
               width={64}
               height={64}
               fps={8}
-              scale={0.1}
+              scale={0.2}
             />
             <button onClick={saveSprite}>Save and Exit</button>
-            {/* <img src="/sprites/pants/male/magenta_pants_male.png" width={64} height={64}/> */}
           </div>
         );
       } else {
         return (
-          <div>
+          <div className="w-100">
             <form id="choices">
               <h4>Gender</h4>
               <div>
                 <input 
-                  // onChange={() => characterDefinition.gender = "male"} 
-                  onChange={() => {let data = {... characterDefinition}; data.gender = "male"; setCharacterDefinition(data)}}
+                  onChange={() => setCharacterDefinition({...characterDefinition, gender:'male'})}
                   type="radio" 
                   id="male" 
                   name="gender" 
@@ -163,8 +206,7 @@ const CharacterCustomizer = (props) => {
               </div>
               <div>
                 <input 
-                  // onChange={() => characterDefinition.gender = "female"} 
-                  onChange={() => {let data = {... characterDefinition}; data.gender = "female"; setCharacterDefinition(data)}}
+                  onChange={() => setCharacterDefinition({...characterDefinition, gender:'female'})}
                   type="radio" 
                   id="female" 
                   name="gender" 
@@ -176,7 +218,7 @@ const CharacterCustomizer = (props) => {
               {characterDefinition.gender && x()}
               <div>
                 <h4>Animation</h4>
-                {characterDefinition.animation && y()}
+                {characterDefinition !== {} && y()}
               </div>
             </form>
             <button onClick={loadSprite}>Update Character</button>
@@ -185,10 +227,9 @@ const CharacterCustomizer = (props) => {
               width={64}
               height={64}
               fps={8}
-              scale={0.1}
+              scale={0.2}
             />
             <button onClick={saveSprite}>Save and Exit</button>
-            {/* <img src="/sprites/pants/male/magenta_pants_male.png" width={64} height={64}/> */}
           </div>
         );
       }
