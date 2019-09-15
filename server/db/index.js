@@ -191,6 +191,7 @@ module.exports = {
             code,
             prefs,
             childDescription,
+            character:{},
             pushTokens:[],
             tknBalance:0})
         .then(child => Promise.all(tasks.map(task => child.collection("Tasks").add(task))).then(() => child.get()))
@@ -204,5 +205,21 @@ module.exports = {
      */
     setChildDescription: async(username, childId, childDescription) => {
         return db.collection('users').doc(username).collection('children').doc(childId).update({childDescription})
+    },
+    /**
+     * @param {string} username
+     * @param {string} childId
+     */
+    getChildCharacter: async(username, childId) => {
+        return db.collection('users').doc(username).collection('children').doc(childId).get().then(child => child.data()).then(data => data.character)
+    },
+
+    /**
+     * @param {string} username
+     * @param {string} childId
+     * @param {{[prefKey : string]: value}} character
+     */
+    setChildCharacter: async(username,childId,character) => {
+        return db.collection('users').doc(username).collection('children').doc(childId).update({character})
     }
 }

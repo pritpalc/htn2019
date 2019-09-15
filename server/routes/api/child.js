@@ -83,4 +83,8 @@ router.post('/registerToken', (req,res) => {
     db.registerPushToken(req.user.user.username,req.body.token).then(()  => res.json({status: 'success'}))
 })
 
+router.get('/character' , (req,res) => {
+    db.getChildCharacter(req.user.user.username,req.user.childId).then(character => res.json(character))
+})
+
 module.exports = router;
