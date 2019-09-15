@@ -21,4 +21,13 @@ router.get('/children', (req, res) => {
     db.getChildren(req.user.user.username).then(children => res.json(children))
 })
 
+router.post('/registerToken', (req,res) => {
+    db.registerPushToken(req.user.user.username,req.body.token).then(()  => res.json({status: 'success'}))
+})
+
+router.post('/newChild', (req,res) => {
+    db.newChild(req.user.user.username,req.body.prefs,req.body.code,req.body.childDescription,req.body.tasks)
+        .then(child => res.json(child))
+})
+
 module.exports = router;
