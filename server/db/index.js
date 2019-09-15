@@ -195,7 +195,7 @@ module.exports = {
             pushTokens:[],
             tknBalance:0})
         .then(child => Promise.all(tasks.map(task => child.collection("Tasks").add(task))).then(() => child.get()))
-        .then(child => ({...child.data()}))
+        .then(child => ({...child.data(),childId:child.id}))
     },
 
     /**
