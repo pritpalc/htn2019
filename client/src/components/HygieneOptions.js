@@ -10,39 +10,50 @@ class HygieneOptions extends React.Component {
       isTeen: props.isTeen,
       showerSchedule: props.showerSchedule,
       brushingSchedule: props.brushingSchedule,
-      deodorant: props.deodorant
+      deodorant: props.deodorant,
+      code: props.code
     };
   }
 
   // TODO: call API for onChange for each input (pass down token)
   updateChildDescription(e) {
     e.preventDefault();
+    postAuthenticatedData(`/description/${this.state.code}`, {
+      childDescription: e.target.value
+    }, this.props.token);
   }
 
   updatePreferences(e) {
+    console.log("UPDATE PREF");
+    console.log(e);
     e.preventDefault();
+    postAuthenticatedData(`/preferences/${this.state.code}`, {
+      childDescription: e.target.value
+    }, this.props.token);
   }
 
-  deleteChild(e) {
-    this.props.deleteChild(e.code); // TODO: pass in child code
+  deleteChild() {
+    console.log(this.state);
+    this.props.deleteChild(this.state.code);
   }
 
   render() {
     // TODO: add a section to choose age category first and then recommend
     // TODO: takes in props for all selected
     // TODO: add links for more instructions or add text detailing everything
+    // TODO: add dates and times for scheduling
     return (
       <div className="container">
         <h3>Preferences for Child</h3>
         <form onSubmit={this.updatePreferences.bind(this)}>
           <div className="form-group">
-            <label htmlFor="childName">Child's Name</label>
+            <label htmlFor="childDescription">Child's Name</label>
             <input 
               type="text" 
               className="form-control" 
-              id="childName" 
+              id="childDescription" 
               placeholder="Enter name" 
-              value={this.state.name} 
+              value={this.state.childDescription} 
               onChange={this.updateChildDescription.bind(this)}
             />
           </div>
@@ -93,7 +104,7 @@ class HygieneOptions extends React.Component {
             </select>
           </div>
           <button type="submit" className="btn btn-primary">Save</button>
-          <button className="btn btn-danger" onClick={this.deleteChild}>Delete</button>
+          <button className="btn btn-danger ml-3" onClick={this.deleteChild.bind(this)}>Delete</button>
         </form>
         <hr />
       </div>

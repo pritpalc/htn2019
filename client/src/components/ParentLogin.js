@@ -1,6 +1,7 @@
 import React from 'react';
 import Children from './Children';
-import { postData, getAuthenticatedData } from '../utils';
+import { postData } from '../utils';
+import { messaging } from '../init-fcm';
 
 class ParentLogin extends React.Component {
   constructor() {
@@ -24,7 +25,8 @@ class ParentLogin extends React.Component {
         console.log(response);
         this.setState({
           token: JSON.parse(response).token,
-          loggedIn: true})
+          loggedIn: true
+        })
           .then(() =>  messaging.requestPermission()) 
           .then(() =>  messaging.getToken())
           .then(notificationToken => {

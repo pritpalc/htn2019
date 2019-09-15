@@ -36,6 +36,7 @@ class Children extends React.Component {
             brushingSchedule={child.prefs.brushingSchedule}
             deodorant={child.prefs.deodorant}
             token={this.props.token}
+            code={child.code}
             deleteChild={this.deleteChild.bind(this)}
           />
         );
@@ -68,8 +69,8 @@ class Children extends React.Component {
   }
 
   deleteChild(childCode) {
-    this.setState(prevState => {
-      return prevState.children.filter(child => child.code !== childCode);
+    this.setState({
+      children: this.state.children.filter(child => child.code !== childCode)
     });
   }
 
