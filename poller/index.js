@@ -86,6 +86,14 @@ console.log(nextDate({
                 parentTokens = parent.data().pushTokens
                 sendMessage({msg:"Its time to '"+baseMessage+"'!"},childTokens)
                 sendMessage({msg:"We just remined '"+child.data().childDescription+"' to '"+baseMessage+"'"},parentTokens)
+                db.collection('notifications').add({
+                    task:baseMessage,
+                    confirmed:false,
+                    ignored:false,
+                    sent:new Date(),       
+                    parent:parent.ref.path,
+                    child:child.ref.path
+                })
             })
             childTokens = task.ref.parent.parent.get()
         }

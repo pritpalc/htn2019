@@ -30,4 +30,9 @@ router.post('/newChild', (req,res) => {
         .then(child => res.json(child))
 })
 
+
+router.get('/notifications', (req, res) => {
+    db.getUserNotifications(req.user.user.username).then(notifications => res.json(notifications))
+})
+
 module.exports = router;
