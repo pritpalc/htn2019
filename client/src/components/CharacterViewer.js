@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import { postData, getAuthenticatedData } from '../utils';
 import * as SpriteAnimator from 'react-sprite-animator';
 import CharacterCustomizer from './CharacterCustomizer';
+import ChildNotifications from './ChildNotifications';
 import { Link } from "react-router-dom";
 
 const CharacterViewer = (props) => {
@@ -11,6 +12,7 @@ const CharacterViewer = (props) => {
     const [characterDefinition, setCharacterDefinition] = useState({})
     const [image, setImage] = useState(null)
     const [customizeCharacter, setCustomizeCharacter] = useState(false)
+    const [showingNotifications, showNotifications] = useState(false)
     useEffect(() => {
       getAuthenticatedData("/api/child/character", props.token)
         .then(
@@ -63,6 +65,15 @@ const CharacterViewer = (props) => {
         }
       )
     }
+    if(showingNotifications){
+      return (
+        <ChildNotifications
+          token={props.token}
+          closeModal={() => showNotifications(false)}
+
+        />
+      )
+    }
 
     if (isLoaded) {
       if (isNewUser) {
@@ -78,6 +89,11 @@ const CharacterViewer = (props) => {
         } else {
           return (
             <div className="vh-100 align-items-center justify-content-center d-flex flex-column">
+              <div className="text-center">
+                <a href="#" onClick={() => showNotifications(true)}>
+                  <img style={{width:"20%"}} src="http://pluspng.com/img-png/bell-png-alarm-bell-icon-256.png"/>
+                </a>
+              </div>
               <SpriteAnimator
                 sprite={image}
                 width={64}

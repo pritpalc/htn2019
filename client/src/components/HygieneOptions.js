@@ -95,7 +95,7 @@ class HygieneOptions extends React.Component {
     e.preventDefault();
     let ele = e.target.elements;
     postAuthenticatedData("/api/user/newChild", {
-      code: this.state.code,
+      code: ""+ this.state.code,
       childDescription: ele.childDescription.value,
       prefs: {
         isTeen: ele.isTeen.value,
@@ -133,7 +133,7 @@ class HygieneOptions extends React.Component {
 
   createScheduledTasks(schedule, taskName) {
     let units, amount;
-    let startDate = moment().add(1, 'days').calendar();
+    let startDate = moment().add(1, 'days').unix()
 
     switch(schedule) {
       case "Once a day":

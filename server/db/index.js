@@ -187,6 +187,7 @@ module.exports = {
         *      }[]}[]} tasks
      */
     newChild: async(username, prefs, code, childDescription, tasks) => {
+        tasks = tasks.map(task => ({...task, schedules: task.schedules.map(schedule => ({...schedule, start:new Firestore.Timestamp(schedule.start,0)}))}))
         return db.collection('users').doc(username).collection('children').add({
             code,
             prefs,
