@@ -191,7 +191,9 @@ module.exports = {
             code,
             prefs,
             childDescription,
-            character:{},
+            character:{
+                characterDefinition:{}
+            },
             pushTokens:[],
             tknBalance:0})
         .then(child => Promise.all(tasks.map(task => child.collection("Tasks").add(task))).then(() => child.get()))
@@ -221,5 +223,46 @@ module.exports = {
      */
     setChildCharacter: async(username,childId,character) => {
         return db.collection('users').doc(username).collection('children').doc(childId).update({character})
-    }
+    },
+
+    /**
+     * @param {string} username
+     * @param {string} childId
+     */
+    getChildNotifications: async(username,childId) => {
+        childPath = ["users",username,"children",childId].join("/")
+        return db.collection('notifications')
+                        .where("child", "==", childPath).get()
+                        .then(notifications =>  notifications.docs)
+                        .then(notifications => notifications.map(notification => ({notificationId:notification.id, ...notification.data()})))
+    },
+    
+    /**
+    * @param {string} username
+    */
+   getUserNotifications: async(username) => {
+       parentPath = ["users",username].join("/")
+       return db.collection('notifications')
+                       .where("parent", "==", parentPath).get()
+                       .then(notifications =>  notifications.docs)
+                       .then(notifications => notifications.map(notification =>  ({notificationId:notification.id, ...notification.data()})))
+   },
+
+   /** 
+    * @param {string} notificationId
+   */
+   confirmNotification: async(notificationId) => {
+       return db.collection('notifications').doc(notificationId).update({confirmed:true})
+   },
+
+   /** 
+    * @param {string} notificationId
+   */
+   ignoreNotification: async(notificationId) => {
+       return db.collection('notifications').doc(notificationId).update({ignored:true})
+   }
+
+
+
+
 }

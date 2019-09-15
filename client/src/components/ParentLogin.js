@@ -1,7 +1,12 @@
 import React from 'react';
 import Children from './Children';
+<<<<<<< HEAD
 import { postData } from '../utils';
 import { messaging } from '../init-fcm';
+=======
+import { messaging} from '../init-fcm';
+import { postData, getAuthenticatedData, postAuthenticatedData } from '../utils';
+>>>>>>> b094fdcf87be3612354da7d064db03c100d18396
 
 class ParentLogin extends React.Component {
   constructor() {
@@ -23,23 +28,15 @@ class ParentLogin extends React.Component {
     postData("/auth/login", data)
       .then(response => {
         console.log(response);
-        this.setState({
+        return this.setState({
           token: JSON.parse(response).token,
-          loggedIn: true
+          loggedIn: true})
         })
+          .catch(error => console.log(error))
           .then(() =>  messaging.requestPermission()) 
           .then(() =>  messaging.getToken())
-          .then(notificationToken => {
-            
-        })
-        .catch(function(err) {
-          console.log("Unable to get permission to notify.", err);
-        });
-      navigator.serviceWorker.addEventListener("message", (message) => console.log(message));;
-      })
-      .catch(error => {
-        console.log(error);
-      });
+          .then(token => postAuthenticatedData('/api/user/registerToken',{token}, this.state.token))
+          .catch((err) => console.log("Unable to get permission to notify.", err))
   }
 
   render() {

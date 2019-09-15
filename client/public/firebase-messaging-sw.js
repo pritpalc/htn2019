@@ -18,10 +18,11 @@ messaging.setBackgroundMessageHandler(function(payload) {
       }
     })
     .then(() => {
-      return registration.showNotification("my notification title");
+      console.log(payload)
+      return registration.showNotification(payload.data.msg);
     });
   return promiseChain;
 });
 self.addEventListener('notificationclick', function(event) {
-  console.log(clicked)
+  console.log("clicked")
 });

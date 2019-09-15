@@ -80,7 +80,7 @@ router.post('/description/:childId', (req, res) => {
 
 
 router.post('/registerToken', (req,res) => {
-    db.registerPushToken(req.user.user.username,req.body.token).then(()  => res.json({status: 'success'}))
+    db.registerChildPushToken(req.user.user.username,req.user.childId,req.body.token).then(()  => res.json({status: 'success'}))
 })
 
 router.get('/character' , (req,res) => {
@@ -89,6 +89,19 @@ router.get('/character' , (req,res) => {
 
 router.post('/character', (req, res) => {
     db.setChildCharacter(req.user.user.username,req.user.childId,req.body).then(()  => res.json({status: 'success'}))
+})
+
+router.get('/notifications', (req, res) => {
+    db.getChildNotifications(req.user.user.username,req.user.childId).then(notifications => res.json(notifications))
+})
+
+router.post('/notification/confirm', (req, res) => {
+    db.confirmNotification(req.body.notificationId).then(()  => res.json({status: 'success'}))
+})
+
+
+router.post('/notification/ignore', (req, res) => {
+    db.ignoreNotification(req.body.notificationId).then(()  => res.json({status: 'success'}))
 })
 
 module.exports = router;
