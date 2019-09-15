@@ -195,5 +195,14 @@ module.exports = {
             tknBalance:0})
         .then(child => Promise.all(tasks.map(task => child.collection("Tasks").add(task))).then(() => child.get()))
         .then(child => ({...child.data()}))
+    },
+
+    /**
+     * @param {string} username
+     * @param {string} childId
+     * @param {string} childDescription
+     */
+    setChildDescription: async(username, childId, childDescription) => {
+        return db.collection('users').doc(username).collection('children').doc(childId).update({childDescription})
     }
 }
