@@ -1,12 +1,7 @@
 import React from 'react';
 import Children from './Children';
-<<<<<<< HEAD
-import { postData } from '../utils';
-import { messaging } from '../init-fcm';
-=======
 import { messaging} from '../init-fcm';
 import { postData, getAuthenticatedData, postAuthenticatedData } from '../utils';
->>>>>>> b094fdcf87be3612354da7d064db03c100d18396
 
 class ParentLogin extends React.Component {
   constructor() {
