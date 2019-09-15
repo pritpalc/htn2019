@@ -161,5 +161,38 @@ module.exports = {
         }).then(children => {
             return children.map(child =>child.data() ).map(data => ({...data}))
         })
+    },
+
+    /**
+     * @param {string} username
+     * @param {string} childId
+     * @param {number} tkns
+     * @returns {Promise<boolean>} if tokens successfully added to child tknBalance
+     */
+    addTkns: async (username, childId, tkns) => {
+        let admin = require('firebase-admin');
+        return db.collection('users').doc(username).collection('children').doc(childId).update({tknBalance: admin.firestore.FieldValue.increment(tkns)}).then(result => {
+            return true
+        })
+    },
+
+    /**
+     * @param {string} username
+     * @param {string} childId
+     * @param {number} tkns
+     * @returns {Promise<boolean} if tokens successfully removed from child tknBalance
+     */
+    removeTkns: async (username, childId, tkns) => {
+        let admin = require('firebase-admin');
+        var balance = db.collection('users').doc(username).collection('children').doc(childId).get()
+        if (balance >= tkns){
+            return db.collection('users').doc(username).collection('children').doc(childId).update({tknBalance: admin.firestore.FieldValue.increment(-tkns)}).then(result => {
+                return true
+            })
+        }
+        else{
+            Promise.resolve(false)
+        }
     }
+
 }
