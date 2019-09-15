@@ -27,6 +27,7 @@ const CharacterViewer = (props) => {
 
             if (Object.entries(data).length === 0 && data.constructor === Object) {
               setIsNewUser(true);
+              setIsLoaded(true);
             } else {
               loadSprite(data);
             }
@@ -42,7 +43,7 @@ const CharacterViewer = (props) => {
     const loadSprite = (data) => {
       console.log(data)
       const row = data.animation; 
-      const {gender, animation, ...pictures} = data
+      const {gender, animation,facial, ...pictures} = data
       console.log(row);
       console.log(pictures)
       postData("/sprites/layer",{
@@ -66,7 +67,7 @@ const CharacterViewer = (props) => {
     if (isLoaded) {
       if (isNewUser) {
         return (
-          <CharacterCustomizer token={props.token} newUser={true} characterDefinition={{}} />
+          <CharacterCustomizer token={props.token} newUser={true} characterDefinition={{}} setCustomizeCharacter={(value, data) => {setCustomizeCharacter(value); setCharacterDefinition(data); loadSprite(data);}}/>
         );
       } else {
         if (customizeCharacter) {

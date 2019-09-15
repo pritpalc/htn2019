@@ -43,9 +43,7 @@ class ChildLogin extends React.Component {
     const { loggedIn, token } = this.state;
     if (loggedIn) {
       return (
-        <div className="w-100">
-          <CharacterViewer token={token}/>
-        </div>
+        <CharacterViewer token={token}/>
       )
     } else {
       return (

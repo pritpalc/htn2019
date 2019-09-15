@@ -9,3 +9,7 @@
   margin: 0;
   background-size: 200%;
 }
+.highlighted {
+  border: black 2px solid;
+  border-radius: 30%;
+}

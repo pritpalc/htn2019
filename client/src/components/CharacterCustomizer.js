@@ -13,6 +13,8 @@ const Gallery = (props) => {
   )
 }
 
+
+
 const CharacterCustomizer = (props) => {
     const [error, setError] =  useState(null)
     const [isLoaded, setIsLoaded] = useState(false)
@@ -34,7 +36,7 @@ const CharacterCustomizer = (props) => {
         }
       )
     },[])
-
+    const constantFeatures = (gender) => ({eyes:"eyes/"+gender+"/"+items.eyes[gender][0], facial:undefined, nose:"nose/"+gender+"/"+items.nose[gender][0]})
     const loadSprite = () => {
       const row = characterDefinition.animation;
       const {gender, animation, ...data} = characterDefinition
@@ -53,44 +55,52 @@ const CharacterCustomizer = (props) => {
     }
 
     const saveSprite = () => {
-      postAuthenticatedData("/api/child/character", {
-        characterDefinition
-      }, props.token)
+      postAuthenticatedData("/api/child/character", 
+        {characterDefinition:{...characterDefinition, ...constantFeatures(characterDefinition.gender)}}
+      , props.token)
       .then(
         (result) => {
           console.log(result);
-          props.setCustomizeCharacter(false, characterDefinition);
+          props.setCustomizeCharacter(false, {...characterDefinition, ...constantFeatures(characterDefinition.gender)});
         },
         (error) => {
           setError(error)
         }
       )
     }
-
     const x = () => {
       let output = [];
-
+      
+      const gender = characterDefinition.gender;
       const responsive = {}
       for(let i = 0,j=1; i <=1024; i += 64,j+=1){
         responsive[i] = {items:j}
       }
-      const gender = characterDefinition.gender;
-      return ( <div> {Object.keys(items).map(category => <div>
-          <h4>{category}</h4>
-          <AliceCarousel
-            responsive={responsive}
-            infinite={true}
-            autoPlay={false}
-            items={items[category][gender].map(el => {
-              const val = category+"/"+gender+"/"+el;
-              return <div>
-                <figure className="cropped-image">
-                    <img src={"/sprites/" + val} />
-                  </figure>
-              </div>})}
-          />
-        </div>)
-      }</div>
+      
+      return(
+        <div> 
+          {Object.keys(items).filter(catagory => Object.keys(constantFeatures(gender)).indexOf(catagory) === -1)
+            .map(category => 
+            <div>
+              <h4 className="text-capitalize">{category}</h4>
+              <AliceCarousel
+                responsive={responsive}
+                infinite={true}
+                autoPlay={false}
+                items={items[category][gender].map(el => {
+                  const val = category+"/"+gender+"/"+el;
+                  return (
+                    <div onClick={() => setCharacterDefinition({...characterDefinition, [category]: val})} onDragStart={e => e.preventDefault()}>
+                      <figure className={"cropped-image"+(characterDefinition[category] === val?" highlighted":"")}>
+                        <img src={"/sprites/" + val} />
+                      </figure>
+                    </div>
+                  )
+                })}
+              />
+            </div>
+          )}
+        </div>
       )
       /*
       for(const category in items){
@@ -127,109 +137,118 @@ const CharacterCustomizer = (props) => {
         for (let j=0; j< animationPositions.length; j++) {
           const id = animationPositions.length*i+j;
           output.push(
-            <div>
-              <input onChange={() => {let data = {... characterDefinition}; data.animation = id; setCharacterDefinition(data)}} type="radio" id={id} name="Animation" value={id} checked={characterDefinition.animation === id}/>
-              <label htmlFor={id}>{animationNames[i] + " " + animationPositions[j]}</label>
-            </div>
+            <option value={id}>{animationNames[i] + " " + animationPositions[j]}</option>
           )
         }
       }
       output.push(
-        <div>
-          <input onChange={() => {let data = {... characterDefinition}; data.animation = 20; setCharacterDefinition(data)}} type="radio" id={20} name="Animation" value={20} checked={characterDefinition.animation === 20}/>
-          <label htmlFor={20}>Hurt</label>
-        </div>
+        <option value={20}>Hurt</option>
       )
-      return output;
+      return (
+        <select className="mb-3" value={characterDefinition.animation} onChange={(event) => setCharacterDefinition({...characterDefinition, animation: event.target.value})}>
+          {output}
+        </select>
+      );
     }
 
     if (isLoaded) {
       if (props.newUser) {
         return(
-          <div className="w-100">
-            <form id="choices">
-              <h4>Gender</h4>
-              <div>
-                <input 
-                  onChange={() => setCharacterDefinition({...characterDefinition, gender:'male', animation:1})}
-                  type="radio" 
-                  id="male" 
-                  name="gender" 
-                  value="male"
-                  checked={characterDefinition.gender === "male"}
+          <div className="container">
+            <div className="row">
+              <form id="choices" className="col-12">
+                <h4>Gender</h4>
+                <div>
+                  <input 
+                    onChange={() => setCharacterDefinition({...characterDefinition, gender:'male', animation:1})}
+                    type="radio" 
+                    id="male" 
+                    name="gender" 
+                    value="male"
+                    checked={characterDefinition.gender === "male"}
+                  />
+                  <label htmlFor="male">Male</label>
+                </div>
+                <div>
+                  <input 
+                    onChange={() => setCharacterDefinition({...characterDefinition, gender:'male', animation:1})}
+                    type="radio" 
+                    id="female" 
+                    name="gender" 
+                    value="female"
+                    checked={characterDefinition.gender === "female"}
+                  />
+                  <label htmlFor="female">Female</label>
+                </div>
+                {characterDefinition.gender && x()}
+                <div>
+                  <h4>Animation</h4>
+                  {characterDefinition.animation && y()}
+                </div>
+              </form>
+              <div className="col-12 flex-column align-items-center">
+                <button onClick={loadSprite} type="button" className="btn btn-primary mt-5">Update Character</button>
+                <SpriteAnimator
+                  sprite={image}
+                  width={64}
+                  height={64}
+                  fps={8}
+                  scale={0.2}
                 />
-                <label htmlFor="male">Male</label>
+                <button onClick={saveSprite} type="button" className="btn btn-success mt-5">Save and Exit</button>
               </div>
-              <div>
-                <input 
-                  onChange={() => setCharacterDefinition({...characterDefinition, gender:'male', animation:1})}
-                  type="radio" 
-                  id="female" 
-                  name="gender" 
-                  value="female"
-                  checked={characterDefinition.gender === "female"}
-                />
-                <label htmlFor="female">Female</label>
-              </div>
-              {characterDefinition.gender && x()}
-              <div>
-                <h4>Animation</h4>
-                {characterDefinition.animation && y()}
-              </div>
-            </form>
-            <button onClick={loadSprite}>Update Character</button>
-            <SpriteAnimator
-              sprite={image}
-              width={64}
-              height={64}
-              fps={8}
-              scale={0.2}
-            />
-            <button onClick={saveSprite}>Save and Exit</button>
+            </div>
           </div>
         );
       } else {
         return (
-          <div className="w-100">
-            <form id="choices">
-              <h4>Gender</h4>
-              <div>
-                <input 
-                  onChange={() => setCharacterDefinition({...characterDefinition, gender:'male'})}
-                  type="radio" 
-                  id="male" 
-                  name="gender" 
-                  value="male" 
-                  checked={characterDefinition.gender === "male"}
+          <div className="container">
+            <div className="row">
+              <form id="choices" className="col-12">
+                <h2 className="pt-3">Customize Your Character</h2>
+                <h4>Gender</h4>
+                <div className="btn-group btn-group-toggle" data-toggle="buttons">
+                  <label htmlFor="male"
+                      className={characterDefinition.gender === "male"?"btn btn-primary active":"btn btn-secondary"}
+
+                  ><input 
+                    onChange={() => setCharacterDefinition({...characterDefinition, gender:'male'})}
+                    type="radio" 
+                    id="male" 
+                    name="gender" 
+                    value="male" 
+                    checked={characterDefinition.gender === "male"}
+                  />Male</label>
+                  
+                  <label htmlFor="female"                     className={characterDefinition.gender === "female"?"btn btn-primary active":"btn btn-secondary"}><input 
+                    onChange={() => setCharacterDefinition({...characterDefinition, gender:'female'})}
+                    type="radio" 
+                    id="female" 
+                    name="gender" 
+                    value="female" 
+                    checked={characterDefinition.gender === "female"}
+                  /> Female</label>
+                </div>
+                {characterDefinition.gender && x()}
+                <div>
+                  <h4>Animation</h4>
+                  {characterDefinition !== {} && y()}
+                </div>
+              </form>
+              <div className="w-100 align-items-center justify-content-center d-flex flex-column mb-5">
+                <SpriteAnimator
+                  sprite={image}
+                  width={64}
+                  height={64}
+                  fps={8}
+                  scale={0.2}
                 />
-                <label htmlFor="male">Male</label>
+                <div className="w-100 d-flex flex-row justify-content-around">
+                  <button onClick={loadSprite} type="button" className="btn btn-primary mt-5">Update Character</button>
+                  <button onClick={saveSprite} type="button" className="btn btn-success mt-5">Save and Exit</button>
+                </div>
               </div>
-              <div>
-                <input 
-                  onChange={() => setCharacterDefinition({...characterDefinition, gender:'female'})}
-                  type="radio" 
-                  id="female" 
-                  name="gender" 
-                  value="female" 
-                  checked={characterDefinition.gender === "female"}
-                />
-                <label htmlFor="female">Female</label>
-              </div>
-              {characterDefinition.gender && x()}
-              <div>
-                <h4>Animation</h4>
-                {characterDefinition !== {} && y()}
-              </div>
-            </form>
-            <button onClick={loadSprite}>Update Character</button>
-            <SpriteAnimator
-              sprite={image}
-              width={64}
-              height={64}
-              fps={8}
-              scale={0.2}
-            />
-            <button onClick={saveSprite}>Save and Exit</button>
+            </div>
           </div>
         );
       }
