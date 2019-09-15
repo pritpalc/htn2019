@@ -87,4 +87,8 @@ router.get('/character' , (req,res) => {
     db.getChildCharacter(req.user.user.username,req.user.childId).then(character => res.json(character))
 })
 
+router.post('/character', (req, res) => {
+    db.setChildCharacter(req.user.user.username,req.user.childId,req.body).then(()  => res.json({status: 'success'}))
+})
+
 module.exports = router;
