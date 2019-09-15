@@ -151,7 +151,7 @@ module.exports = {
         return db.collection('users').doc(username).collection('children').listDocuments().then(children => {
             return Promise.all(children.map(child => child.get()))
         }).then(children => {
-            return children.map(child =>child.data() ).map(data => ({...data}))
+            return children.map(child => ({...child.data(),childId:child.id}))
         })
     },
 
