@@ -3,6 +3,7 @@ import ReactCodeInput from 'react-code-input';
 import { messaging} from '../init-fcm';
 import { postData, postAuthenticatedData } from '../utils';
 import CharacterViewer from './CharacterViewer';
+import { Link } from "react-router-dom";
 
 class ChildLogin extends React.Component {
   constructor() {
@@ -42,23 +43,20 @@ class ChildLogin extends React.Component {
     const { loggedIn, token } = this.state;
     if (loggedIn) {
       return (
-        <div>
+        <div className="w-100">
           <CharacterViewer token={token}/>
         </div>
       )
     } else {
       return (
-        <div className="container">
-          <div className="row justify-content-center">
-            <h2>Login</h2>
-          </div>
-          <div className="row justify-content-center mt-3">
-            <ReactCodeInput 
-              type="number"
-              fields={6}
-              onChange={this.logIn.bind(this)}
-            />
-          </div>  
+        <div className="col-12 vh-100 d-flex flex-column align-items-center justify-content-center">
+          <h2>Enter Code</h2>
+          <ReactCodeInput 
+            type="number"
+            fields={6}
+            onChange={this.logIn.bind(this)}
+          />
+          <Link to="/" className="pt-5 text-center"><p>&larr; Back</p></Link>
         </div>
       );
     }

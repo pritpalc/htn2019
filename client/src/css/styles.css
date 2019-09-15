@@ -1,0 +1,11 @@
+#child-login {
+  height: 100vh;
+}
+
+.cropped-image {
+  width: 64px;
+  height: 64px;
+  overflow: hidden;
+  margin: 0;
+  background-size: 200%;
+}

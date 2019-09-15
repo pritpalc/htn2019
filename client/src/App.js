@@ -50,7 +50,7 @@ const App = ()  => {
   return (
     <Router>
       <div className="container">
-        <div className="row justify-content-center mt-3">
+        <div className="row justify-content-center">
           <Route path="/" exact component={Login} />
           <Route path="/parent/" component={Parent} />
           <Route path="/child/" component={Child} />
