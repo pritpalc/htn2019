@@ -11,41 +11,99 @@ class HygieneOptions extends React.Component {
       showerSchedule: props.showerSchedule,
       brushingSchedule: props.brushingSchedule,
       deodorant: props.deodorant,
-      code: props.code
+      code: props.code,
+      id: props.id
     };
   }
 
-  // TODO: call API for onChange for each input (pass down token)
   updateChildDescription(e) {
     e.preventDefault();
-    postAuthenticatedData(`/description/${this.state.code}`, {
+    if (this.state.id !== undefined) {
+      postAuthenticatedData(`/api/child/description/${this.state.id}`, {
+        childDescription: e.target.value
+      }, this.props.token);
+    }
+
+    this.setState({
       childDescription: e.target.value
-    }, this.props.token);
+    });
+  }
+
+  updateIsTeen(e) {
+    if (e.target.value === "true") {
+      this.setState({
+        isTeen: e.target.value,
+        showerSchedule: "Daily",
+        brushingSchedule: "Twice a day",
+        deodorant: "Once a day"
+      });
+    } else {
+      this.setState({
+        isTeen: e.target.value,
+        showerSchedule: "Twice a week",
+        brushingSchedule: "Once a day",
+        deodorant: "Never"
+      });
+    }
+  }
+
+  routeUpdate(e) {
+    if (this.state.id === undefined) {
+      this.createChild(e);
+    } else {
+      this.updatePreferences(e);
+    }
   }
 
   updatePreferences(e) {
-    console.log("UPDATE PREF");
-    console.log(e);
     e.preventDefault();
-    postAuthenticatedData(`/preferences/${this.state.code}`, {
-      childDescription: e.target.value
-    }, this.props.token);
+    let ele = e.target.elements;
+    postAuthenticatedData(`/api/child/preferences/${this.state.id}`, {
+      isTeen: ele.isTeen.value,
+      showerSchedule: ele.showerSchedule.value,
+      brushingSchedule: ele.brushingSchedule.value,
+      deodorant: ele.deodorant.value
+    }, this.props.token)
+      .then(response => {
+        console.log(response);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+
+  createChild(e) {
+    e.preventDefault();
+    let ele = e.target.elements;
+    postAuthenticatedData("/api/user/newChild", {
+      code: this.state.code,
+      childDescription: ele.childDescription.value,
+      prefs: {
+        isTeen: ele.isTeen.value,
+        showerSchedule: ele.showerSchedule.value,
+        brushingSchedule: ele.brushingSchedule.value,
+        deodorant: ele.deodorant.value
+      }
+    }, this.props.token)
+      .then(response => {
+        console.log(response);
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
 
   deleteChild() {
-    console.log(this.state);
     this.props.deleteChild(this.state.code);
   }
 
   render() {
-    // TODO: add a section to choose age category first and then recommend
-    // TODO: takes in props for all selected
     // TODO: add links for more instructions or add text detailing everything
     // TODO: add dates and times for scheduling
     return (
       <div className="container">
         <h3>Preferences for Child</h3>
-        <form onSubmit={this.updatePreferences.bind(this)}>
+        <form onSubmit={this.routeUpdate.bind(this)}>
           <div className="form-group">
             <label htmlFor="childDescription">Child's Name</label>
             <input 
@@ -58,12 +116,18 @@ class HygieneOptions extends React.Component {
             />
           </div>
           <div className="form-group">
+            <label htmlFor="childCode">Child's Login Code</label>
+            <input className="form-control" type="text" placeholder={this.state.code} readOnly />
+          </div>
+          <div className="form-group">
             <label htmlFor="isTeen">Age Category</label>
             <select 
               className="custom-select my-1 mr-sm-2" 
               id="isTeen"
+              value={this.state.isTeen}
+              onChange={this.updateIsTeen.bind(this)}
             >
-              <option value={false} selected>5 - 11</option>
+              <option value={false}>5 - 11</option>
               <option value={true}>12 - 18</option>
             </select>
           </div>
@@ -72,8 +136,10 @@ class HygieneOptions extends React.Component {
             <select 
               className="custom-select my-1 mr-sm-2" 
               id="showerSchedule"
+              value={this.state.showerSchedule}
+              onChange={(e) => this.setState({ showerSchedule: e.target.value })}
             >
-              <option value="Daily (Recommended)" selected>Daily (Recommended)</option>
+              <option value="Daily">Daily</option>
               <option value="Twice a day">Twice a day</option>
               <option value="Once a week">Once a week</option>
               <option value="Twice a week">Twice a week</option>
@@ -84,9 +150,11 @@ class HygieneOptions extends React.Component {
             <select 
               className="custom-select my-1 mr-sm-2" 
               id="brushingSchedule"
+              value={this.state.brushingSchedule}
+              onChange={(e) => this.setState({ brushingSchedule: e.target.value })}
             >
               <option value="Once a day">Once a day</option>
-              <option value="Twice a day (Recommended)" selected>Twice a day (Recommended)</option>
+              <option value="Twice a day">Twice a day</option>
               <option value="Three times a day">Three times a day</option>
               <option value="Once every two days">Once every two days</option>
             </select>
@@ -96,9 +164,11 @@ class HygieneOptions extends React.Component {
             <select 
               className="custom-select my-1 mr-sm-2" 
               id="deodorant"
+              value={this.state.deodorant}
+              onChange={(e) => this.setState({ deodorant: e.target.value })}
             >
               <option value="Never">Never</option>
-              <option value="Once a day (Recommended)" selected>Once a day (Recommended)</option>
+              <option value="Once a day">Once a day</option>
               <option value="Twice a day">Twice a day</option>
               <option value="Once every two days">Once every two days</option>
             </select>

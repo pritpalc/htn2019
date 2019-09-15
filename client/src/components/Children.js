@@ -37,6 +37,7 @@ class Children extends React.Component {
             deodorant={child.prefs.deodorant}
             token={this.props.token}
             code={child.code}
+            id={child.childId}
             deleteChild={this.deleteChild.bind(this)}
           />
         );

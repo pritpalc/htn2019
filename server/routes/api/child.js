@@ -35,7 +35,7 @@ router.post('/preferences', (req, res) => {
 
 router.post('/preferences/:childId', (req, res) => {
     if(req.user.type !== "child"){
-        db.updateChildPreferences(req.user.user.username, req.user.childId, req.body).then(result => {
+        db.updateChildPreferences(req.user.user.username, req.params.childId, req.body).then(result => {
             if(result){
                 res.status(200).json({status:"successfull"})
             } else {

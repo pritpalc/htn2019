@@ -45,5 +45,7 @@ export async function postAuthenticatedData(url = '', data = {}, bearer) {
     body: JSON.stringify(data)
   });
 
+  console.log(response);
+
   return await response.text();
 }
